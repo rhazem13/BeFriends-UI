@@ -1,0 +1,57 @@
+<mat-card>
+  <mat-card-content>
+      <div *ngIf="(messageService.messageThread$ | async)?.length === 0">
+        No messages yet.. say hi by using the message box below
+      </div>
+      <ul #scrollMe
+      style="overflow: scroll; height: 500px;"
+      [scrollTop]="scrollMe.scrollHeight"
+      *ngIf="(messageService.messageThread$ | async)?.length > 0"
+      class="chat scroller">
+        <li *ngFor="let message of (messageService.messageThread$ | async)">
+          <div>
+            <div class="row">
+              <div class="col-xs-10">
+                <div class="chat-body">
+                  <div class="header">
+                    <small class="text-muted">
+                      <span class="fa fa-clock-o"> {{message.messageSent | timeago}}</span>
+                      <span *ngIf="!message.dateRead
+                      && message.senderUsername!==username" style="color:grey">
+                      (unseen)
+                      </span>
+                      <span style="color:green" *ngIf="message.dateRead
+                      && message.senderUsername!==username">
+                      (seen {{message.dateRead|timeago}})
+                      </span>
+                    </small>
+                  </div>
+                  <p>{{message.content}}</p>
+                </div>
+              </div>
+              <div class="col-xs-2" style="display: flex;">
+                <span class="chat-img">
+                  <img src="{{message.senderPhotoUrl||'./assets/user.png'}}" class="rounded-circle" alt="{{message.senderUsername}}" />
+                </span>
+              </div>
+            </div>
+
+          </div>
+        </li>
+      </ul>
+  </mat-card-content>
+  <mat-card-footer>
+    <form #messageForm="ngForm" (ngSubmit)="sendMessage()" autocomplete="off">
+      <mat-form-field style="width:100%">
+        <input type="text" matInput name="messageContent" required [(ngModel)]="messageContent">
+        <button color="primary" [disabled]="!messageForm.valid" matSuffix mat-icon-button type="submit">
+          <mat-icon
+          fontSet="fa"
+          fontIcon="fa-paper-plane"
+          style="font-size: 1.35rem"
+        ></mat-icon>
+        </button>
+      </mat-form-field>
+    </form>
+  </mat-card-footer>
+</mat-card>
