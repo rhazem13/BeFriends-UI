@@ -12,7 +12,7 @@ RUN npm run build --prod
 
 # fina lstage
 FROM nginx:stable-alpine-perl
-COPY --from=build /app/dist/helpdesk /usr/share/nginx/html
+COPY --from=build /app/dist/client /usr/share/nginx/html
 
 
 
